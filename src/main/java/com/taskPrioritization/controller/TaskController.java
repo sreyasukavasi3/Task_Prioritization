@@ -1,14 +1,17 @@
 package com.taskPrioritization.controller;
 
-import com.taskPrioritization.Task;
+import com.taskPrioritization.model.Task;
+import com.taskPrioritization.model.Task.Status;
 import com.taskPrioritization.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/tasks")
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     @Autowired
@@ -26,19 +29,10 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public List<Task> getTaskById(@PathVariable Long id) {
-        Optional<Task> task = taskService.getTaskById();
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Optional<Task> task = taskService.getTaskById(id);
         return task.map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
-
-    }
-
-    @GetMapping("/{status}")
-    public List<Task> getTaskByStatus(@PathVariable Status id) {
-        Optional<Task> task = taskService.getTaskByStatus();
-        return task.map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
-
+                   .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -47,4 +41,8 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/status/{status}")
+    public List<Task> getTasksByStatus(@PathVariable Status status) {
+        return taskService.getTasksByStatus(status);
+    }
 }
