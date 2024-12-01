@@ -1,8 +1,10 @@
 package com.taskPrioritization.service;
 
 import com.taskPrioritization.repository.TaskRepository;
-import com.taskPrioritization.Task;
+import com.taskPrioritization.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.taskPrioritization.model.Task.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +28,8 @@ public class TaskService {
         return taskRepository.findById(id);
     }
 
-    public Optional<Task> getTaskByStatus(Status status) {
-        return taskRepository.findById(status);
+    public List<Task> getTasksByStatus(Status status) {
+        return taskRepository.findByStatus(status);
     }
 
     public void deleteTask(Long id) {
